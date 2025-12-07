@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>حلقات الأختين – الرئيسية</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&family=Cairo:wght@200..1000&display=swap');
+
+  :root{
+    --brand:#1f3d2a;
+    --brand-700:#13261b;
+    --brand-600:#1b3323;
+    --accent:#2e7d32;
+    --bg:#f6faf7;
+    --fg:#0f1411;
+    --muted:#627368;
+    --ring:#d9e5de;
+    --shadow:0 6px 18px rgba(0,0,0,.08);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--fg);
+            font-family:'Cairo','Baloo Bhaijaan 2',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif}
+  .container{max-width:560px;margin:0 auto;padding:0 14px}
+
+  .topbar{position:sticky;top:0;z-index:1000;background:var(--brand);color:#fff}
+  .topbar-inner{height:60px;display:flex;align-items:center;justify-content:space-between}
+  .hamburger{width:42px;height:42px;border-radius:14px;border:1px solid #ffffff33;background:#ffffff14;display:grid;place-items:center;cursor:pointer}
+  .bars,.bars::before,.bars::after{display:block;height:2px;background:#fff;border-radius:2px;position:relative;width:20px}
+  .bars::before,.bars::after{content:"";position:absolute;right:0;width:100%}
+  .bars::before{top:-6px}.bars::after{top:6px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:40px;height:40px;border-radius:12px;background:#ffffff1a;border:1px solid #ffffff33;display:grid;place-items:center;color:#fff;font-weight:900}
+
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.25s}
+  .backdrop.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100dvh;width:min(86vw,320px);background:#fff;border-left:1px solid var(--ring);box-shadow:-12px 0 30px rgba(0,0,0,.12);transform:translateX(100%);transition:.28s;z-index:1001;display:flex;flex-direction:column}
+  .drawer.open{transform:translateX(0)}
+  .drawer header{padding:14px;border-bottom:1px solid var(--ring);display:flex;justify-content:space-between;align-items:center}
+  .drawer nav{padding:12px;display:grid;gap:8px}
+  .drawer a{padding:12px;border:1px solid var(--ring);border-radius:14px;text-decoration:none;color:var(--fg);background:#fff}
+
+  .hero{padding:22px 0 10px}
+  .hero h1{font-size:clamp(22px,5vw,30px);margin:8px 0;color:var(--brand);font-weight:1000;opacity:0;transform:translateY(12px);transition:.5s}
+  .hero p{margin:0;color:var(--muted);line-height:1.8;opacity:0;transform:translateY(12px);transition:.5s .05s}
+  .reveal{opacity:1!important;transform:none!important}
+
+  .stats{padding:14px 0;display:grid;gap:12px;justify-items:center}
+  .stat{width:100%;max-width:300px;height:80px;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);
+        border:1px solid rgba(31,61,42,.25);border-radius:var(--radius);box-shadow:var(--shadow);
+        display:flex;flex-direction:column;justify-content:center;align-items:center;
+        opacity:0;transform:translateY(14px);transition:.45s}
+  .stat.reveal{opacity:1;transform:none}
+  .stat-value{font-size:22px;font-weight:900;color:var(--brand)}
+  .stat-title{font-size:13px;color:var(--muted)}
+
+  .actions{padding:18px 0;display:grid;gap:12px;justify-items:center}
+  .btn{appearance:none;border:none;cursor:pointer;font-weight:900;padding:16px 24px;border-radius:18px;transition:.2s;font-size:16px;text-decoration:none;display:inline-block;text-align:center}
+  .btn-primary{background:var(--brand-600);color:#fff}
+  .btn-primary:hover{background:var(--brand-700)}
+  .btn-primary:active{background:#0f2016}
+  .btn-outline{background:#fff;color:var(--brand);border:2px solid var(--brand-600)}
+  .btn-outline:active{background:#eaf2ed}
+
+  .darkstrip{margin-top:24px;background:#0b0f0d;color:#fff}
+  .darkstrip .inner{padding:30px 0}
+  .dark-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-bottom:16px}
+  .dark-btn{padding:16px 24px;border-radius:16px;border:none;background:#1f3d2a;color:#fff;font-weight:900;cursor:pointer;font-size:16px}
+  .dark-btn:active{background:#2b5c3a}
+  .rights{text-align:center;font-size:15px;color:#ccc}
+
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:1200}
+  .modal{background:#fff;border-radius:18px;max-width:520px;width:100%;padding:16px}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="container topbar-inner">
+  <button class="hamburger" id="openDrawer"><span class="bars"></span></button>
+  <div class="brand"><div class="logo">ش</div><div><b>شعار المدرسة</b></div></div>
+</div></header>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <header><div style="font-weight:900;color:var(--brand)">القائمة</div><button id="closeDrawer">← رجوع</button></header>
+  <nav><a href="#home">الرئيسية</a><a href="points.html">ترتيب المتفوقين </a><a href="#permit" id="openPermitBtn">التصريح</a></nav>
+</aside>
+
+<main id="home">
+<section class="hero container">
+  <h1 id="title">مرحبًا بك في حلقات الأختين</h1>
+  <p id="lead">      🌿 عن الحلقة
+
+حلقة مسجد الأختين هي بيئة إيمانية تربوية تجمع طلاب المرحلتين الابتدائية والمتوسطة، تهدف إلى غرس محبة القرآن في القلوب، وتنمية الأخلاق، وبناء جيلٍ يعتزّ بدينه وقيمه.
+نسعى لأن تكون الحلقة مكانًا يجمع بين المرح، والتعليم، والانضباط، حيث يتعلم طلابنا تلاوة كتاب الله بإتقان، ويحفظون آياته بتدبرٍ وفهم.
+<br>
+🎯 أهدافنا
+<br>
+ربط الطلاب بكتاب الله حفظًا وتلاوةً وتدبرًا.
+<br>
+غرس الأخلاق الإسلامية في التعامل مع الآخرين.
+<br>
+تشجيع الطلاب على المشاركة والانضباط والمسؤولية.
+<br>
+تنمية روح التعاون والاحترام داخل الحلقة وخارجها.
+<br>
+📘 التزامات الطالب
+<br>
+حرصًا على نجاح الحلقة وتميّزها، يُرجى من جميع الطلاب الالتزام بالتالي:
+<br>
+🕐 الحضور والانضباط
+<br>
+الالتزام بمواعيد الحضور والانصراف وعدم الغياب إلا لعذرٍ مقبول.
+<br>
+في حال الغياب، يُرجى إبلاغ المشرف مسبقًا.
+<br>
+المشاركة الفعّالة في الحلقة والحرص على حفظ المقرر اليومي.
+<br>
+👕 المظهر واللباس
+<br>
+الالتزام باللباس المحتشم والمرتب المناسب للمسجد.
+<br>
+الحرص على النظافة الشخصية والمظهر اللائق أمام الزملاء والمعلمين.
+<br>
+🤝 الأدب والسلوك
+<br>
+احترام المعلمين والمشرفين وزملاء الحلقة.
+<br>
+التحدث بلطفٍ وأدب، والابتعاد عن المزاح المؤذي أو الألفاظ غير اللائقة.
+<br>
+المحافظة على هدوء الحلقة ونظافة المكان.
+<br>
+🌟 شعارنا
+<br>
+"نُرَبِّي بالنور، ونتعلم بالقرآن، ونرتقي بالأدب."</p>
+</section>
+
+<section class="container stats" id="stats">
+  <div class="stat"><div class="stat-value"><span class="num" data-target="14">0</span>+ طالب</div><div class="stat-title">عدد الطلاب</div></div>
+  <div class="stat"><div class="stat-value"><span class="num" data-target="1">0</span>+ حلقة</div><div class="stat-title">عدد الحلقات</div></div>
+  <div class="stat"><div class="stat-value"><span class="num" data-target="1">0</span>+ نشاط</div><div class="stat-title">أنشطة ترفيهية</div></div>
+</section>
+
+<section class="actions container">
+  <a class="btn btn-primary" href="points.html"> ترتيب المتفوقين</a>
+  <a class="btn btn-outline" href="https://docs.google.com/forms/d/e/1FAIpQLSem6CO5ziVe2weLD7St9XwkKkeCwDoahXjAlCQSkXq3O_eOsw/viewform?usp=dialog">تسجيل طالب جديد</a>
+</section>
+
+<section class="darkstrip">
+  <div class="container inner">
+    <div class="dark-actions">
+      <button class="dark-btn" id="openPermitBtn2">التصريح (صورة + رقم)</button>
+      <a class="dark-btn" href="#">الدعم الفني</a>
+    </div>
+    <div class="rights">© <span id="year"></span> جميع الحقوق محفوظة لحلقات الأختين</div>
+  </div>
+</section>
+</main>
+
+<div class="modal-backdrop" id="permitModal"><div class="modal"><h3>تصريح الجهة</h3><div style="margin:12px 0;border:2px dashed var(--ring);height:200px;display:grid;place-items:center">صورة التصريح هنا</div><p>رقم التصريح: 000000</p><button onclick="closePermit()">إغلاق</button></div></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+$("#openDrawer").onclick=()=>{drawer.classList.add("open");backdrop.classList.add("show")}
+$("#closeDrawer").onclick=()=>{drawer.classList.remove("open");backdrop.classList.remove("show")}
+$("#backdrop").onclick=()=>{drawer.classList.remove("open");backdrop.classList.remove("show")}
+function closePermit(){permitModal.style.display="none"}
+$("#openPermitBtn").onclick=()=>permitModal.style.display="flex"
+$("#openPermitBtn2").onclick=()=>permitModal.style.display="flex"
+$("#year").textContent=new Date().getFullYear();
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("reveal");const nums=e.target.querySelectorAll(".num")||[];nums.forEach(n=>startCount(n));io.unobserve(e.target)}})},{threshold:.25});
+io.observe($("#title"));io.observe($("#lead"));$$(".stat").forEach(s=>io.observe(s));
+const counted=new WeakSet();
+function startCount(el){if(counted.has(el))return;counted.add(el);const target=+el.dataset.target,duration=1200,start=performance.now();function tick(now){const p=Math.min(1,(now-start)/duration),val=Math.floor((1-Math.pow(1-p,3))*target);el.textContent=val;if(p<1)requestAnimationFrame(tick);else el.textContent=target}requestAnimationFrame(tick)}
+</script>
+</body>
+</html>
